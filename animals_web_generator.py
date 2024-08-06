@@ -76,6 +76,30 @@ def print_output_data(data):
 #     return string_data
 
 
+def serialize_animal(animal):
+    """
+    Returns a serialized animal string for a given animal dictionary
+
+    Args:
+        animal (dict): data of one animal in dictionary
+
+    Returns:
+        serialized_string (str): serialized string for the given animal
+    """
+    animal_string_data = '<li class="cards__item">\n'
+    animal_string_data += f'  <div class="card__title">{animal["Name"]}</div>\n'
+    animal_string_data += '  <p class="card__text">\n'
+    animal_string_data += "    <ul>\n"
+    animal_string_data += f'      <li>Location: {", ".join(animal["Location"])}</li>\n'
+    if "Type" in animal:
+        animal_string_data += f'      <li>Type: {animal["Type"]}</li>\n'
+    animal_string_data += f'      <li>Diet: {animal["Diet"]}</li>\n'
+    animal_string_data += "    </ul>\n"
+    animal_string_data += "  </p>\n"
+    animal_string_data += "</li>\n"
+    return animal_string_data
+
+
 def get_string_data(data):
     """
     Returns the string of animal data in the specified HTML format.
@@ -88,17 +112,7 @@ def get_string_data(data):
     """
     string_data = ""
     for animal in data:
-        string_data += '<li class="cards__item">\n'
-        string_data += f'  <div class="card__title">{animal["Name"]}</div>\n'
-        string_data += '  <p class="card__text">\n'
-        string_data += (
-            f'      <strong>Location:</strong> {", ".join(animal["Location"])}<br/>\n'
-        )
-        if "Type" in animal:
-            string_data += f'      <strong>Type:</strong> {animal["Type"]}<br/>\n'
-        string_data += f'      <strong>Diet:</strong> {animal["Diet"]}<br/>\n'
-        string_data += "  </p>\n"
-        string_data += "</li>\n"
+        string_data += serialize_animal(animal)
     return string_data
 
 
