@@ -2,7 +2,8 @@ import json
 
 
 def load_data(file_path):
-    """Loads a JSON file
+    """
+    Loads a JSON file
 
     Args:
         file_path (str): The path to the JSON file to be loaded.
@@ -38,24 +39,64 @@ def get_output_data(data):
 
 
 def print_output_data(data):
-    """Prints the data in a format
+    """
+    Prints the data in a format
 
     Args:
         data (list of dict): the selected animal data to be printed
     """
     for animal in data:
         for key, value in animal.items():
-            if key == "Location":
+            if isinstance(value, list):
                 print(f"{key}: {', '.join(value)}")
             else:
                 print(f"{key}: {value}")
         print()
 
 
+def get_string_data(data):
+    """
+    Returns the string of animal data
+
+    Args:
+        data(list of dict): the selected animal data to be printed
+
+    Returns:
+        string_data(string): the selected animal data in a string
+    """
+    string_data = r"<pre>"
+    for animal in data:
+        for key, value in animal.items():
+            if isinstance(value, list):
+                string_data += f"{key}: {', '.join(value)}\n"
+            else:
+                string_data += f"{key}: {value}\n"
+        string_data += "\n"
+    string_data += r"</pre>"
+    return string_data
+
+
+def replace_animal_info(animal_data_string):
+    """
+    Replaces the placeholder text with the animal data string.
+
+    Args:
+        animal_data_string(str): The string to place in HTML
+    """
+    with open("animals_template.html", "r") as html_file:
+        html_data = html_file.read()
+    html_data = html_data.replace("__REPLACE_ANIMALS_INFO__", animal_data_string)
+    with open("index.html", "w") as out_file:
+        out_file.write(html_data)
+    print("HTML file created!")
+
+
 def main():
     animals_data = load_data("animals_data.json")
     output_data = get_output_data(animals_data)
-    print_output_data(output_data)
+    # print_output_data(output_data)
+    animal_string_data = get_string_data(output_data)
+    replace_animal_info(animal_string_data)
 
 
 if __name__ == "__main__":
