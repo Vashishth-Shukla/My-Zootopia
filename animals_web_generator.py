@@ -66,12 +66,12 @@ def get_string_data(data):
     """
     string_data = r"<pre>"
     for animal in data:
+        string_data += '<li class="cards__item">'
         for key, value in animal.items():
             if isinstance(value, list):
-                string_data += f"{key}: {', '.join(value)}\n"
+                string_data += f"{key}: {', '.join(value)}<br/>\n"
             else:
-                string_data += f"{key}: {value}\n"
-        string_data += "\n"
+                string_data += f"{key}: {value}<br/>\n"
     string_data += r"</pre>"
     return string_data
 
