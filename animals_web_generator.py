@@ -1,4 +1,5 @@
 import json
+import sys
 
 
 def load_data(file_path):
@@ -128,15 +129,74 @@ def replace_animal_info(animal_data_string):
     html_data = html_data.replace("__REPLACE_ANIMALS_INFO__", animal_data_string)
     with open("animals.html", "w") as out_file:
         out_file.write(html_data)
-    print("HTML file created!")
+    print("\nHTML file created!\n")
+
+
+def print_welcome_message(message):
+    """Prints welcome message"""
+    print()
+    num = (80 - len(message)) // 2
+    print(":" * num + message + ":" * num)
+    print()
+
+
+def get_skin_types(data):
+    """This function reads the json and returns a list of skin types"""
+    skin_types = set()
+    for animal in data:
+        if "skin_type" in animal["characteristics"]:
+            skin_types.add(animal["characteristics"]["skin_type"])
+    return skin_types
+
+
+def get_user_input_skin_type(skin_types):
+    """
+    This function reads data from the user and returns the user input skin type
+    Args:
+        skin_types(set) : set of availabe skin types
+
+    Returns:
+        user_input_skin_type(str): ((Were you expecting plazma TV? :D))
+    """
+    skin_types_lower = {skin_type.lower(): skin_type for skin_type in skin_types}
+    while True:
+        print("Available skin types are: \n")
+        print("\n".join(list(skin_types)))
+        user_input_skin_type = input(
+            "\nPlease enter a skin type of the animal that you wish to see on the site: "
+        )
+        if user_input_skin_type.lower() in skin_types_lower:
+            break
+    return user_input_skin_type
+
+
+def get_selcted_animal_data(skin_type, data):
+    """This function returns the list of animals with the selected skin type."""
+    return [
+        animal
+        for animal in data
+        if "skin_type" in animal["characteristics"]
+        and animal["characteristics"]["skin_type"] == skin_type
+    ]
+
+
+def make_skin_type_html():
+    """Makes the skin type html"""
+    animal_data = load_data("animals_data.json")
+    skin_types = get_skin_types(animal_data)
+    user_input_skin_type = get_user_input_skin_type(skin_types)
+    selected_animal_data = get_selcted_animal_data(user_input_skin_type, animal_data)
+    output_data = get_output_data(selected_animal_data)
+    animal_string_data = get_string_data(output_data)
+    replace_animal_info(animal_string_data)
 
 
 def main():
-    animals_data = load_data("animals_data.json")
-    output_data = get_output_data(animals_data)
-    # print_output_data(output_data)
-    animal_string_data = get_string_data(output_data)
-    replace_animal_info(animal_string_data)
+    """Main function to start the Zootopia"""
+    print_welcome_message("Welcome to the Zootopia")
+    make_skin_type_html()
+    print("Good bye!")
+    sys.exit()
 
 
 if __name__ == "__main__":
