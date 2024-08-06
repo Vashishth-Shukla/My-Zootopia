@@ -54,25 +54,51 @@ def print_output_data(data):
         print()
 
 
+# def get_string_data(data):
+#     """
+#     Returns the string of animal data
+
+#     Args:
+#         data(list of dict): the selected animal data to be printed
+
+#     Returns:
+#         string_data(string): the selected animal data in a string
+#     """
+#     string_data = r"<pre>"
+#     for animal in data:
+#         string_data += '<li class="cards__item">'
+#         for key, value in animal.items():
+#             if isinstance(value, list):
+#                 string_data += f"{key}: {', '.join(value)}<br/>\n"
+#             else:
+#                 string_data += f"{key}: {value}<br/>\n"
+#     string_data += r"</pre>"
+#     return string_data
+
+
 def get_string_data(data):
     """
-    Returns the string of animal data
+    Returns the string of animal data in the specified HTML format.
 
     Args:
         data(list of dict): the selected animal data to be printed
 
     Returns:
-        string_data(string): the selected animal data in a string
+        string_data (string): the selected animal data in a formatted HTML string
     """
-    string_data = r"<pre>"
+    string_data = ""
     for animal in data:
-        string_data += '<li class="cards__item">'
-        for key, value in animal.items():
-            if isinstance(value, list):
-                string_data += f"{key}: {', '.join(value)}<br/>\n"
-            else:
-                string_data += f"{key}: {value}<br/>\n"
-    string_data += r"</pre>"
+        string_data += '<li class="cards__item">\n'
+        string_data += f'  <div class="card__title">{animal["Name"]}</div>\n'
+        string_data += '  <p class="card__text">\n'
+        string_data += (
+            f'      <strong>Location:</strong> {", ".join(animal["Location"])}<br/>\n'
+        )
+        if "Type" in animal:
+            string_data += f'      <strong>Type:</strong> {animal["Type"]}<br/>\n'
+        string_data += f'      <strong>Diet:</strong> {animal["Diet"]}<br/>\n'
+        string_data += "  </p>\n"
+        string_data += "</li>\n"
     return string_data
 
 
@@ -86,7 +112,7 @@ def replace_animal_info(animal_data_string):
     with open("animals_template.html", "r") as html_file:
         html_data = html_file.read()
     html_data = html_data.replace("__REPLACE_ANIMALS_INFO__", animal_data_string)
-    with open("index.html", "w") as out_file:
+    with open("animals.html", "w") as out_file:
         out_file.write(html_data)
     print("HTML file created!")
 
